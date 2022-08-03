@@ -2,6 +2,7 @@
 import argparse
 import multiprocessing
 from argparse import RawTextHelpFormatter
+from loguru import logger as log
 
 from tqdm.contrib.concurrent import process_map
 
@@ -44,7 +45,7 @@ def main():
         c.datasets, eval_split=True, eval_split_max_size=c.eval_split_max_size, eval_split_size=c.eval_split_size
     )
     items = train_items + eval_items
-    print("Num items:", len(items))
+    log.info("Num items:", len(items))
 
     is_lang_def = all(item["language"] for item in items)
 
@@ -60,10 +61,10 @@ def main():
     phones_force_lower = [c.lower() for c in phones]
     phones_force_lower = set(phones_force_lower)
 
-    print(f" > Number of unique phonemes: {len(phones)}")
-    print(f" > Unique phonemes: {''.join(sorted(phones))}")
-    print(f" > Unique lower phonemes: {''.join(sorted(lower_phones))}")
-    print(f" > Unique all forced to lower phonemes: {''.join(sorted(phones_force_lower))}")
+    log.info(f" > Number of unique phonemes: {len(phones)}")
+    log.info(f" > Unique phonemes: {''.join(sorted(phones))}")
+    log.info(f" > Unique lower phonemes: {''.join(sorted(lower_phones))}")
+    log.info(f" > Unique all forced to lower phonemes: {''.join(sorted(phones_force_lower))}")
 
 
 if __name__ == "__main__":

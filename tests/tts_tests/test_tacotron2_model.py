@@ -1,6 +1,7 @@
 import copy
 import os
 import unittest
+from loguru import logger as log
 
 import torch
 from torch import nn, optim
@@ -196,7 +197,7 @@ class TacotronGSTTrainTest(unittest.TestCase):
             # if count not in [145, 59]:
             name, param = name_param
             if name == "gst_layer.encoder.recurrence.weight_hh_l0":
-                # print(param.grad)
+                # log.info(param.grad)
                 continue
             assert (param != param_ref).any(), "param {} {} with shape {} not updated!! \n{}\n{}".format(
                 name, count, param.shape, param, param_ref
@@ -252,7 +253,7 @@ class TacotronGSTTrainTest(unittest.TestCase):
             # if count not in [145, 59]:
             name, param = name_param
             if name == "gst_layer.encoder.recurrence.weight_hh_l0":
-                # print(param.grad)
+                # log.info(param.grad)
                 continue
             assert (param != param_ref).any(), "param {} {} with shape {} not updated!! \n{}\n{}".format(
                 name, count, param.shape, param, param_ref

@@ -1,6 +1,7 @@
 import os
 import shutil
 import unittest
+from loguru import logger as log
 
 import numpy as np
 import torch
@@ -35,7 +36,7 @@ DATA_EXIST = True
 if not os.path.exists(c.data_path):
     DATA_EXIST = False
 
-print(" > Dynamic data loader test: {}".format(DATA_EXIST))
+log.info(" > Dynamic data loader test: {}".format(DATA_EXIST))
 
 
 class TestTTSDataset(unittest.TestCase):
@@ -157,7 +158,7 @@ class TestTTSDataset(unittest.TestCase):
                 mel_lengths = data["mel_lengths"]
                 if i == 0:
                     max_len = mel_lengths[0]
-                print(mel_lengths)
+                log.info(mel_lengths)
                 self.assertTrue(all(max_len >= mel_lengths))
 
     def test_padding_and_spectrograms(self):

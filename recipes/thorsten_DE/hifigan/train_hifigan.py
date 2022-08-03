@@ -33,7 +33,7 @@ config = HifiganConfig(
 
 # download dataset if not already present
 if not os.path.exists(config.data_path):
-    print("Downloading dataset")
+    log.info"Downloading dataset")
     download_path = os.path.abspath(os.path.join(os.path.abspath(config.data_path), "../../"))
     download_thorsten_de(download_path)
 

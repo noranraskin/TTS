@@ -1,5 +1,6 @@
 import importlib
 import re
+from loguru import logger as log
 
 from coqpit import Coqpit
 
@@ -27,13 +28,13 @@ def setup_model(config: Coqpit):
                 MyModel = getattr(MyModel, to_camel(config.model))
             except ModuleNotFoundError as e:
                 raise ValueError(f"Model {config.model} not exist!") from e
-    print(" > Vocoder Model: {}".format(config.model))
+    log.info(" > Vocoder Model: {}".format(config.model))
     return MyModel.init_from_config(config)
 
 
 def setup_generator(c):
     """TODO: use config object as arguments"""
-    print(" > Generator Model: {}".format(c.generator_model))
+    log.info(" > Generator Model: {}".format(c.generator_model))
     MyModel = importlib.import_module("TTS.vocoder.models." + c.generator_model.lower())
     MyModel = getattr(MyModel, to_camel(c.generator_model))
     # this is to preserve the Wavernn class name (instead of Wavernn)
@@ -96,7 +97,7 @@ def setup_generator(c):
 
 def setup_discriminator(c):
     """TODO: use config objekt as arguments"""
-    print(" > Discriminator Model: {}".format(c.discriminator_model))
+    log.info(" > Discriminator Model: {}".format(c.discriminator_model))
     if "parallel_wavegan" in c.discriminator_model:
         MyModel = importlib.import_module("TTS.vocoder.models.parallel_wavegan_discriminator")
     else:

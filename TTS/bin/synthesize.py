@@ -4,6 +4,10 @@
 import argparse
 import sys
 from argparse import RawTextHelpFormatter
+from loguru import logger as log
+
+log.remove()
+log.add(sys.stdout, colorize=True, format="{message}")
 
 # pylint: disable=redefined-outer-name, unused-argument
 from pathlib import Path
@@ -320,23 +324,23 @@ If you don't specify any models, then it uses LJSpeech based English model.
 
     # query speaker ids of a multi-speaker model.
     if args.list_speaker_idxs:
-        print(
+        log.info(
             " > Available speaker ids: (Set --speaker_idx flag to one of these values to use the multi-speaker model."
         )
-        print(synthesizer.tts_model.speaker_manager.ids)
+        log.info(synthesizer.tts_model.speaker_manager.ids)
         return
 
     # query langauge ids of a multi-lingual model.
     if args.list_language_idxs:
-        print(
+        log.info(
             " > Available language ids: (Set --language_idx flag to one of these values to use the multi-lingual model."
         )
-        print(synthesizer.tts_model.language_manager.ids)
+        log.info(synthesizer.tts_model.language_manager.ids)
         return
 
     # check the arguments against a multi-speaker model.
     if synthesizer.tts_speakers_file and (not args.speaker_idx and not args.speaker_wav):
-        print(
+        log.info(
             " [!] Looks like you use a multi-speaker model. Define `--speaker_idx` to "
             "select the target speaker. You can list the available speakers for this model by `--list_speaker_idxs`."
         )
@@ -344,7 +348,7 @@ If you don't specify any models, then it uses LJSpeech based English model.
 
     # RUN THE SYNTHESIS
     if args.text:
-        print(" > Text: {}".format(args.text))
+        log.info(" > Text: {}".format(args.text))
 
     # kick it
     wav = synthesizer.tts(
@@ -359,7 +363,7 @@ If you don't specify any models, then it uses LJSpeech based English model.
     )
 
     # save the results
-    print(" > Saving output to {}".format(args.out_path))
+    log.info(" > Saving output to {}".format(args.out_path))
     synthesizer.save_wav(wav, args.out_path)
 
 

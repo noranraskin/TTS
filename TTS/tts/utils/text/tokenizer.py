@@ -1,4 +1,5 @@
 from typing import Callable, Dict, List, Union
+from loguru import logger as log
 
 from TTS.tts.utils.text import cleaners
 from TTS.tts.utils.text.characters import Graphemes, IPAPhonemes
@@ -72,8 +73,8 @@ class TTSTokenizer:
                 # discard but store not found characters
                 if char not in self.not_found_characters:
                     self.not_found_characters.append(char)
-                    print(text)
-                    print(f" [!] Character {repr(char)} not found in the vocabulary. Discarding it.")
+                    log.error(text)
+                    log.error(f" [!] Character {repr(char)} not found in the vocabulary. Discarding it.")
         return token_ids
 
     def decode(self, token_ids: List[int]) -> str:
@@ -133,16 +134,16 @@ class TTSTokenizer:
 
     def print_logs(self, level: int = 0):
         indent = "\t" * level
-        print(f"{indent}| > add_blank: {self.add_blank}")
-        print(f"{indent}| > use_eos_bos: {self.use_eos_bos}")
-        print(f"{indent}| > use_phonemes: {self.use_phonemes}")
+        log.info(f"{indent}| > add_blank: {self.add_blank}")
+        log.info(f"{indent}| > use_eos_bos: {self.use_eos_bos}")
+        log.info(f"{indent}| > use_phonemes: {self.use_phonemes}")
         if self.use_phonemes:
-            print(f"{indent}| > phonemizer:")
+            log.info(f"{indent}| > phonemizer:")
             self.phonemizer.print_logs(level + 1)
         if len(self.not_found_characters) > 0:
-            print(f"{indent}| > {len(self.not_found_characters)} not found characters:")
+            log.info(f"{indent}| > {len(self.not_found_characters)} not found characters:")
             for char in self.not_found_characters:
-                print(f"{indent}| > {char}")
+                log.info(f"{indent}| > {char}")
 
     @staticmethod
     def init_from_config(config: "Coqpit", characters: "BaseCharacters" = None):

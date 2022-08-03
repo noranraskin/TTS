@@ -1,6 +1,7 @@
 """Find all the unique characters in a dataset"""
 import argparse
 from argparse import RawTextHelpFormatter
+from loguru import logger as log
 
 from TTS.config import load_config
 from TTS.tts.datasets import load_tts_samples
@@ -35,10 +36,10 @@ def main():
     chars_force_lower = [c.lower() for c in chars]
     chars_force_lower = set(chars_force_lower)
 
-    print(f" > Number of unique characters: {len(chars)}")
-    print(f" > Unique characters: {''.join(sorted(chars))}")
-    print(f" > Unique lower characters: {''.join(sorted(lower_chars))}")
-    print(f" > Unique all forced to lower characters: {''.join(sorted(chars_force_lower))}")
+    log.info(f" > Number of unique characters: {len(chars)}")
+    log.info(f" > Unique characters: {''.join(sorted(chars))}")
+    log.info(f" > Unique lower characters: {''.join(sorted(lower_chars))}")
+    log.info(f" > Unique all forced to lower characters: {''.join(sorted(chars_force_lower))}")
 
 
 if __name__ == "__main__":

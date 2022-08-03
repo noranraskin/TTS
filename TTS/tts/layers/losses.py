@@ -1,4 +1,5 @@
 import math
+from loguru import logger as log
 
 import numpy as np
 import torch
@@ -132,11 +133,11 @@ class SSIMLoss(torch.nn.Module):
         ssim_loss = self.loss_func((y_norm * mask).unsqueeze(1), (y_hat_norm * mask).unsqueeze(1))
 
         if ssim_loss.item() > 1.0:
-            print(f" > SSIM loss is out-of-range {ssim_loss.item()}, setting it 1.0")
+            log.info(f" > SSIM loss is out-of-range {ssim_loss.item()}, setting it 1.0")
             ssim_loss = torch.tensor(1.0, device=ssim_loss.device)
 
         if ssim_loss.item() < 0.0:
-            print(f" > SSIM loss is out-of-range {ssim_loss.item()}, setting it 0.0")
+            log.info(f" > SSIM loss is out-of-range {ssim_loss.item()}, setting it 0.0")
             ssim_loss = torch.tensor(0.0, device=ssim_loss.device)
 
         return ssim_loss

@@ -1,7 +1,6 @@
 # Adapted from https://github.com/pytorch/audio/
 
 import hashlib
-import logging
 import os
 import tarfile
 import urllib
@@ -9,6 +8,7 @@ import urllib.request
 import zipfile
 from os.path import expanduser
 from typing import Any, Iterable, List, Optional
+from loguru import logger as log
 
 from torch.utils.model_zoo import tqdm
 
@@ -153,14 +153,14 @@ def extract_archive(from_path: str, to_path: Optional[str] = None, overwrite: bo
 
     try:
         with tarfile.open(from_path, "r") as tar:
-            logging.info("Opened tar file %s.", from_path)
+            log.info("Opened tar file %s.", from_path)
             files = []
             for file_ in tar:  # type: Any
                 file_path = os.path.join(to_path, file_.name)
                 if file_.isfile():
                     files.append(file_path)
                     if os.path.exists(file_path):
-                        logging.info("%s already extracted.", file_path)
+                        log.info("%s already extracted.", file_path)
                         if not overwrite:
                             continue
                 tar.extract(file_, to_path)
@@ -170,12 +170,12 @@ def extract_archive(from_path: str, to_path: Optional[str] = None, overwrite: bo
 
     try:
         with zipfile.ZipFile(from_path, "r") as zfile:
-            logging.info("Opened zip file %s.", from_path)
+            log.info("Opened zip file %s.", from_path)
             files = zfile.namelist()
             for file_ in files:
                 file_path = os.path.join(to_path, file_)
                 if os.path.exists(file_path):
-                    logging.info("%s already extracted.", file_path)
+                    log.info("%s already extracted.", file_path)
                     if not overwrite:
                         continue
                 zfile.extract(file_, to_path)
@@ -199,9 +199,9 @@ def download_kaggle_dataset(dataset_path: str, dataset_name: str, output_path: s
         import kaggle  # pylint: disable=import-outside-toplevel
 
         kaggle.api.authenticate()
-        print(f"""\nDownloading {dataset_name}...""")
+        log.info(f"""\nDownloading {dataset_name}...""")
         kaggle.api.dataset_download_files(dataset_path, path=data_path, unzip=True)
     except OSError:
-        print(
+        log.error(
             f"""[!] in order to download kaggle datasets, you need to have a kaggle api token stored in your {os.path.join(expanduser('~'), '.kaggle/kaggle.json')}"""
         )

@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+from loguru import logger as log
 
 
 def check_update(model, grad_clip, ignore_stopnet=False, amp_opt_params=None):
@@ -21,11 +22,11 @@ def check_update(model, grad_clip, ignore_stopnet=False, amp_opt_params=None):
     # compatibility with different torch versions
     if isinstance(grad_norm, float):
         if np.isinf(grad_norm):
-            print(" | > Gradient is INF !!")
+            log.info(" | > Gradient is INF !!")
             skip_flag = True
     else:
         if torch.isinf(grad_norm):
-            print(" | > Gradient is INF !!")
+            log.info(" | > Gradient is INF !!")
             skip_flag = True
     return grad_norm, skip_flag
 

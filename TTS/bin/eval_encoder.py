@@ -1,5 +1,6 @@
 import argparse
 from argparse import RawTextHelpFormatter
+from loguru import logger as log
 
 import torch
 from tqdm import tqdm
@@ -45,10 +46,10 @@ def compute_encoder_accuracy(dataset_items, encoder_manager):
     acc_avg = 0
     for key, values in class_acc_dict.items():
         acc = sum(values) / len(values)
-        print("Class", key, "Accuracy:", acc)
+        log.info("Class", key, "Accuracy:", acc)
         acc_avg += acc
 
-    print("Average Accuracy:", acc_avg / len(class_acc_dict))
+    log.info("Average Accuracy:", acc_avg / len(class_acc_dict))
 
 
 if __name__ == "__main__":

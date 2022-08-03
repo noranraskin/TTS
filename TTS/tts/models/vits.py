@@ -3,6 +3,7 @@ import os
 from dataclasses import dataclass, field, replace
 from itertools import chain
 from typing import Dict, List, Tuple, Union
+from loguru import logger as log
 
 import torch
 import torch.distributed as dist
@@ -98,9 +99,9 @@ def wav_to_spec(y, n_fft, hop_length, win_length, center=False):
     y = y.squeeze(1)
 
     if torch.min(y) < -1.0:
-        print("min value is ", torch.min(y))
+        log.info("min value is ", torch.min(y))
     if torch.max(y) > 1.0:
-        print("max value is ", torch.max(y))
+        log.info("max value is ", torch.max(y))
 
     global hann_window
     dtype_device = str(y.dtype) + "_" + str(y.device)
@@ -161,9 +162,9 @@ def wav_to_mel(y, n_fft, num_mels, sample_rate, hop_length, win_length, fmin, fm
     y = y.squeeze(1)
 
     if torch.min(y) < -1.0:
-        print("min value is ", torch.min(y))
+        log.info("min value is ", torch.min(y))
     if torch.max(y) > 1.0:
-        print("max value is ", torch.max(y))
+        log.info("max value is ", torch.max(y))
 
     global mel_basis, hann_window
     dtype_device = str(y.dtype) + "_" + str(y.device)
@@ -722,7 +723,7 @@ class Vits(BaseTTS):
                 )
 
             self.speaker_manager.encoder.eval()
-            print(" > External Speaker Encoder Loaded !!")
+            log.info(" > External Speaker Encoder Loaded !!")
 
             if (
                 hasattr(self.speaker_manager.encoder, "audio_config")
@@ -741,7 +742,7 @@ class Vits(BaseTTS):
     def _init_speaker_embedding(self):
         # pylint: disable=attribute-defined-outside-init
         if self.num_speakers > 0:
-            print(" > initialization of speaker-embedding layers.")
+            log.info(" > initialization of speaker-embedding layers.")
             self.embedded_speaker_dim = self.args.speaker_embedding_channels
             self.emb_g = nn.Embedding(self.num_speakers, self.embedded_speaker_dim)
 
@@ -761,7 +762,7 @@ class Vits(BaseTTS):
             self.language_manager = LanguageManager(language_ids_file_path=config.language_ids_file)
 
         if self.args.use_language_embedding and self.language_manager:
-            print(" > initialization of language-embedding layers.")
+            log.info(" > initialization of language-embedding layers.")
             self.num_languages = self.language_manager.num_languages
             self.embedded_language_dim = self.args.embedded_language_dim
             self.emb_l = nn.Embedding(self.num_languages, self.embedded_language_dim)
@@ -789,7 +790,7 @@ class Vits(BaseTTS):
             for key, value in after_dict.items():
                 if value == before_dict[key]:
                     raise RuntimeError(" [!] The weights of Duration Predictor was not reinit check it !")
-            print(" > Duration Predictor was reinit.")
+            log.info(" > Duration Predictor was reinit.")
 
         if self.args.reinit_text_encoder:
             before_dict = get_module_weights_sum(self.text_encoder)
@@ -799,7 +800,7 @@ class Vits(BaseTTS):
             for key, value in after_dict.items():
                 if value == before_dict[key]:
                     raise RuntimeError(" [!] The weights of Text Encoder was not reinit check it !")
-            print(" > Text Encoder was reinit.")
+            log.info(" > Text Encoder was reinit.")
 
     def get_aux_input(self, aux_input: Dict):
         sid, g, lid, _ = self._set_cond_input(aux_input)
@@ -1156,7 +1157,7 @@ class Vits(BaseTTS):
         y_lengths = torch.tensor([y.size(-1)]).to(y.device)
         speaker_cond_src = reference_speaker_id if reference_speaker_id is not None else reference_d_vector
         speaker_cond_tgt = speaker_id if speaker_id is not None else d_vector
-        # print(y.shape, y_lengths.shape)
+        # log.info(y.shape, y_lengths.shape)
         wav, _, _ = self.voice_conversion(y, y_lengths, speaker_cond_src, speaker_cond_tgt)
         return wav
 
@@ -1397,7 +1398,7 @@ class Vits(BaseTTS):
         Returns:
             Tuple[Dict, Dict]: Test figures and audios to be projected to Tensorboard.
         """
-        print(" | > Synthesizing test sentences.")
+        log.info(" | > Synthesizing test sentences.")
         test_audios = {}
         test_figures = {}
         test_sentences = self.config.test_sentences
@@ -1628,7 +1629,7 @@ class Vits(BaseTTS):
         # handle fine-tuning from a checkpoint with additional speakers
         if hasattr(self, "emb_g") and state["model"]["emb_g.weight"].shape != self.emb_g.weight.shape:
             num_new_speakers = self.emb_g.weight.shape[0] - state["model"]["emb_g.weight"].shape[0]
-            print(f" > Loading checkpoint with {num_new_speakers} additional speakers.")
+            log.info(f" > Loading checkpoint with {num_new_speakers} additional speakers.")
             emb_g = state["model"]["emb_g.weight"]
             new_row = torch.randn(num_new_speakers, emb_g.shape[1])
             emb_g = torch.cat([emb_g, new_row], axis=0)

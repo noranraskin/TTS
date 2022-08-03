@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from glob import glob
 from pathlib import Path
 from typing import List
+from loguru import logger as log
 
 import pandas as pd
 from tqdm import tqdm
@@ -37,7 +38,7 @@ def coqui(root_path, meta_file, ignored_speakers=None):
             }
         )
     if not_found_counter > 0:
-        print(f" | > [!] {not_found_counter} files not found")
+        log.info(f" | > [!] {not_found_counter} files not found")
     return items
 
 
@@ -120,7 +121,7 @@ def mailabs(root_path, meta_files=None, ignored_speakers=None):
         if isinstance(ignored_speakers, list):
             if speaker_name in ignored_speakers:
                 continue
-        print(" | > {}".format(csv_file))
+        log.info(" | > {}".format(csv_file))
         with open(txt_file, "r", encoding="utf-8") as ttf:
             for line in ttf:
                 cols = line.split("|")
@@ -133,7 +134,7 @@ def mailabs(root_path, meta_files=None, ignored_speakers=None):
                     items.append({"text": text, "audio_file": wav_file, "speaker_name": speaker_name})
                 else:
                     # M-AI-Labs have some missing samples, so just print the warning
-                    print("> File %s does not exist!" % (wav_file))
+                    log.warning("> File %s does not exist!" % (wav_file))
     return items
 
 
@@ -196,7 +197,7 @@ def sam_accenture(root_path, meta_file, **kwargs):  # pylint: disable=unused-arg
         text = item.text
         wav_file = os.path.join(root_path, "vo_voice_quality_transformation", item.get("id") + ".wav")
         if not os.path.exists(wav_file):
-            print(f" [!] {wav_file} in metafile does not exist. Skipping...")
+            log.info(f" [!] {wav_file} in metafile does not exist. Skipping...")
             continue
         items.append({"text": text, "audio_file": wav_file, "speaker_name": speaker_name})
     return items
@@ -308,7 +309,7 @@ def custom_turkish(root_path, meta_file, **kwargs):  # pylint: disable=unused-ar
                 continue
             text = cols[1].strip()
             items.append({"text": text, "audio_file": wav_file, "speaker_name": speaker_name})
-    print(f" [!] {len(skipped_files)} files skipped. They don't exist...")
+    log.info(f" [!] {len(skipped_files)} files skipped. They don't exist...")
     return items
 
 
@@ -374,7 +375,7 @@ def vctk(root_path, meta_files=None, wavs_path="wav48_silence_trimmed", mic="mic
         if os.path.exists(wav_file):
             items.append({"text": text, "audio_file": wav_file, "speaker_name": "VCTK_" + speaker_id})
         else:
-            print(f" [!] wav files don't exist - {wav_file}")
+            log.info(f" [!] wav files don't exist - {wav_file}")
     return items
 
 

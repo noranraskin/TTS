@@ -1,6 +1,7 @@
 import copy
 from abc import abstractmethod
 from typing import Dict, Tuple
+from loguru import logger as log
 
 import torch
 from coqpit import Coqpit
@@ -115,7 +116,7 @@ class BaseTacotron(BaseTTS):
             self.decoder.set_r(config.r)
         if eval:
             self.eval()
-            print(f" > Model's reduction rate `r` is set to: {self.decoder.r}")
+            log.info(f" > Model's reduction rate `r` is set to: {self.decoder.r}")
             assert not self.training
 
     def get_criterion(self) -> nn.Module:
@@ -147,7 +148,7 @@ class BaseTacotron(BaseTTS):
         Returns:
             Tuple[Dict, Dict]: Test figures and audios to be projected to Tensorboard.
         """
-        print(" | > Synthesizing test sentences.")
+        log.info(" | > Synthesizing test sentences.")
         test_audios = {}
         test_figures = {}
         test_sentences = self.config.test_sentences
@@ -296,4 +297,4 @@ class BaseTacotron(BaseTTS):
             self.decoder.set_r(r)
             if trainer.config.bidirectional_decoder:
                 trainer.model.decoder_backward.set_r(r)
-            print(f"\n > Number of output frames: {self.decoder.r}")
+            log.info(f"\n > Number of output frames: {self.decoder.r}")

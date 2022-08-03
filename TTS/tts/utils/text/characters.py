@@ -1,5 +1,6 @@
 from dataclasses import replace
 from typing import Dict
+from loguru import logger as log
 
 from TTS.tts.configs.shared_configs import CharactersConfig
 
@@ -276,14 +277,14 @@ class BaseCharacters:
         Prints the vocabulary in a nice format.
         """
         indent = "\t" * level
-        print(f"{indent}| > Characters: {self._characters}")
-        print(f"{indent}| > Punctuations: {self._punctuations}")
-        print(f"{indent}| > Pad: {self._pad}")
-        print(f"{indent}| > EOS: {self._eos}")
-        print(f"{indent}| > BOS: {self._bos}")
-        print(f"{indent}| > Blank: {self._blank}")
-        print(f"{indent}| > Vocab: {self.vocab}")
-        print(f"{indent}| > Num chars: {self.num_chars}")
+        log.info(f"{indent}| > Characters: {self._characters}")
+        log.info(f"{indent}| > Punctuations: {self._punctuations}")
+        log.info(f"{indent}| > Pad: {self._pad}")
+        log.info(f"{indent}| > EOS: {self._eos}")
+        log.info(f"{indent}| > BOS: {self._bos}")
+        log.info(f"{indent}| > Blank: {self._blank}")
+        log.info(f"{indent}| > Vocab: {self.vocab}")
+        log.info(f"{indent}| > Num chars: {self.num_chars}")
 
     @staticmethod
     def init_from_config(config: "Coqpit"):  # pylint: disable=unused-argument

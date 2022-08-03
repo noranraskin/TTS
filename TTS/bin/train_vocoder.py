@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass, field
+from loguru import logger as log
 
 from trainer import Trainer, TrainerArgs
 
@@ -47,7 +48,7 @@ def main():
     # load training samples
     if "feature_path" in config and config.feature_path:
         # load pre-computed features
-        print(f" > Loading features from: {config.feature_path}")
+        log.info(f" > Loading features from: {config.feature_path}")
         eval_samples, train_samples = load_wav_feat_data(config.data_path, config.feature_path, config.eval_split_size)
     else:
         # load data raw wav files

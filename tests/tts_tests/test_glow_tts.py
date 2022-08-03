@@ -1,6 +1,7 @@
 import copy
 import os
 import unittest
+from loguru import logger as log
 
 import torch
 from torch import optim
@@ -111,7 +112,7 @@ class TestGlowTTS(unittest.TestCase):
         config = GlowTTSConfig(num_chars=32)
         model = GlowTTS(config).to(device)
         model.train()
-        print(" > Num parameters for GlowTTS model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for GlowTTS model:%s" % (count_parameters(model)))
         # inference encoder and decoder with MAS
         y = model.forward(input_dummy, input_lengths, mel_spec, mel_lengths)
         self.assertEqual(y["z"].shape, mel_spec.shape)
@@ -138,7 +139,7 @@ class TestGlowTTS(unittest.TestCase):
         )
         model = GlowTTS.init_from_config(config, verbose=False).to(device)
         model.train()
-        print(" > Num parameters for GlowTTS model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for GlowTTS model:%s" % (count_parameters(model)))
         # inference encoder and decoder with MAS
         y = model.forward(input_dummy, input_lengths, mel_spec, mel_lengths, {"d_vectors": d_vector})
         self.assertEqual(y["z"].shape, mel_spec.shape)
@@ -164,7 +165,7 @@ class TestGlowTTS(unittest.TestCase):
         )
         model = GlowTTS.init_from_config(config, verbose=False).to(device)
         model.train()
-        print(" > Num parameters for GlowTTS model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for GlowTTS model:%s" % (count_parameters(model)))
         # inference encoder and decoder with MAS
         y = model.forward(input_dummy, input_lengths, mel_spec, mel_lengths, {"speaker_ids": speaker_ids})
         self.assertEqual(y["z"].shape, mel_spec.shape)
@@ -265,7 +266,7 @@ class TestGlowTTS(unittest.TestCase):
         # reference model to compare model weights
         model_ref = GlowTTS(config).to(device)
         model.train()
-        print(" > Num parameters for GlowTTS model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for GlowTTS model:%s" % (count_parameters(model)))
         # pass the state to ref model
         model_ref.load_state_dict(copy.deepcopy(model.state_dict()))
         count = 0

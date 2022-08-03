@@ -5,6 +5,7 @@ import zipfile
 from pathlib import Path
 from shutil import copyfile, rmtree
 from typing import Dict, Tuple
+from loguru import logger as log
 
 import requests
 
@@ -66,15 +67,15 @@ class ModelManager(object):
                     model_full_name = f"{model_type}--{lang}--{dataset}--{model}"
                     output_path = os.path.join(self.output_prefix, model_full_name)
                     if os.path.exists(output_path):
-                        print(f" {model_count}: {model_type}/{lang}/{dataset}/{model} [already downloaded]")
+                        log.info(f" {model_count}: {model_type}/{lang}/{dataset}/{model} [already downloaded]")
                     else:
-                        print(f" {model_count}: {model_type}/{lang}/{dataset}/{model}")
+                        log.info(f" {model_count}: {model_type}/{lang}/{dataset}/{model}")
                     model_list.append(f"{model_type}/{lang}/{dataset}/{model}")
                     model_count += 1
         return model_list
 
     def _list_for_model_type(self, model_type):
-        print(" Name format: language/dataset/model")
+        log.info(" Name format: language/dataset/model")
         models_name_list = []
         model_count = 1
         model_type = "tts_models"
@@ -82,7 +83,7 @@ class ModelManager(object):
         return [name.replace(model_type + "/", "") for name in models_name_list]
 
     def list_models(self):
-        print(" Name format: type/language/dataset/model")
+        log.info(" Name format: type/language/dataset/model")
         models_name_list = []
         model_count = 1
         for model_type in self.models_dict:
@@ -101,10 +102,10 @@ class ModelManager(object):
         try:
             model_query_idx = int(model_query_idx)
             if model_query_idx <= 0:
-                print("> model_query_idx should be a positive integer!")
+                log.info("> model_query_idx should be a positive integer!")
                 return
         except:
-            print("> model_query_idx should be an integer!")
+            log.info("> model_query_idx should be an integer!")
             return
         model_count = 0
         if model_type in self.models_dict:
@@ -114,22 +115,22 @@ class ModelManager(object):
                         model_name_list.append(f"{model_type}/{lang}/{dataset}/{model}")
                         model_count += 1
         else:
-            print(f"> model_type {model_type} does not exist in the list.")
+            log.info(f"> model_type {model_type} does not exist in the list.")
             return
         if model_query_idx > model_count:
-            print(f"model query idx exceeds the number of available models [{model_count}] ")
+            log.info(f"model query idx exceeds the number of available models [{model_count}] ")
         else:
             model_type, lang, dataset, model = model_name_list[model_query_idx - 1].split("/")
-            print(f"> model type : {model_type}")
-            print(f"> language supported : {lang}")
-            print(f"> dataset used : {dataset}")
-            print(f"> model name : {model}")
+            log.info(f"> model type : {model_type}")
+            log.info(f"> language supported : {lang}")
+            log.info(f"> dataset used : {dataset}")
+            log.info(f"> model name : {model}")
             if "description" in self.models_dict[model_type][lang][dataset][model]:
-                print(f"> description : {self.models_dict[model_type][lang][dataset][model]['description']}")
+                log.info(f"> description : {self.models_dict[model_type][lang][dataset][model]['description']}")
             else:
-                print("> description : coming soon")
+                log.info("> description : coming soon")
             if "default_vocoder" in self.models_dict[model_type][lang][dataset][model]:
-                print(f"> default_vocoder : {self.models_dict[model_type][lang][dataset][model]['default_vocoder']}")
+                log.info(f"> default_vocoder : {self.models_dict[model_type][lang][dataset][model]['default_vocoder']}")
 
     def model_info_by_full_name(self, model_query_name):
         """Print the description of the model from .models.json file using model_full_name
@@ -142,28 +143,28 @@ class ModelManager(object):
             if lang in self.models_dict[model_type]:
                 if dataset in self.models_dict[model_type][lang]:
                     if model in self.models_dict[model_type][lang][dataset]:
-                        print(f"> model type : {model_type}")
-                        print(f"> language supported : {lang}")
-                        print(f"> dataset used : {dataset}")
-                        print(f"> model name : {model}")
+                        log.info(f"> model type : {model_type}")
+                        log.info(f"> language supported : {lang}")
+                        log.info(f"> dataset used : {dataset}")
+                        log.info(f"> model name : {model}")
                         if "description" in self.models_dict[model_type][lang][dataset][model]:
-                            print(
+                            log.info(
                                 f"> description : {self.models_dict[model_type][lang][dataset][model]['description']}"
                             )
                         else:
-                            print("> description : coming soon")
+                            log.info("> description : coming soon")
                         if "default_vocoder" in self.models_dict[model_type][lang][dataset][model]:
-                            print(
+                            log.info(
                                 f"> default_vocoder : {self.models_dict[model_type][lang][dataset][model]['default_vocoder']}"
                             )
                     else:
-                        print(f"> model {model} does not exist for {model_type}/{lang}/{dataset}.")
+                        log.info(f"> model {model} does not exist for {model_type}/{lang}/{dataset}.")
                 else:
-                    print(f"> dataset {dataset} does not exist for {model_type}/{lang}.")
+                    log.info(f"> dataset {dataset} does not exist for {model_type}/{lang}.")
             else:
-                print(f"> lang {lang} does not exist for {model_type}.")
+                log.info(f"> lang {lang} does not exist for {model_type}.")
         else:
-            print(f"> model_type {model_type} does not exist in the list.")
+            log.info(f"> model_type {model_type} does not exist in the list.")
 
     def list_tts_models(self):
         """Print all `TTS` models and return a list of model names
@@ -181,18 +182,18 @@ class ModelManager(object):
 
     def list_langs(self):
         """Print all the available languages"""
-        print(" Name format: type/language")
+        log.info(" Name format: type/language")
         for model_type in self.models_dict:
             for lang in self.models_dict[model_type]:
-                print(f" >: {model_type}/{lang} ")
+                log.info(f" >: {model_type}/{lang} ")
 
     def list_datasets(self):
         """Print all the datasets"""
-        print(" Name format: type/language/dataset")
+        log.info(" Name format: type/language/dataset")
         for model_type in self.models_dict:
             for lang in self.models_dict[model_type]:
                 for dataset in self.models_dict[model_type][lang]:
-                    print(f" >: {model_type}/{lang}/{dataset}")
+                    log.info(f" >: {model_type}/{lang}/{dataset}")
 
     @staticmethod
     def print_model_license(model_item: Dict):
@@ -202,13 +203,13 @@ class ModelManager(object):
             model_item (dict): model item in the models.json
         """
         if "license" in model_item and model_item["license"].strip() != "":
-            print(f" > Model's license - {model_item['license']}")
+            log.info(f" > Model's license - {model_item['license']}")
             if model_item["license"].lower() in LICENSE_URLS:
-                print(f" > Check {LICENSE_URLS[model_item['license'].lower()]} for more info.")
+                log.info(f" > Check {LICENSE_URLS[model_item['license'].lower()]} for more info.")
             else:
-                print(" > Check https://opensource.org/licenses for more info.")
+                log.info(" > Check https://opensource.org/licenses for more info.")
         else:
-            print(" > Model's license - No license information available")
+            log.info(" > Model's license - No license information available")
 
     def download_model(self, model_name):
         """Download model files given the full model name.
@@ -231,10 +232,10 @@ class ModelManager(object):
         # set the model specific output path
         output_path = os.path.join(self.output_prefix, model_full_name)
         if os.path.exists(output_path):
-            print(f" > {model_name} is already downloaded.")
+            log.info(f" > {model_name} is already downloaded.")
         else:
             os.makedirs(output_path, exist_ok=True)
-            print(f" > Downloading model to {output_path}")
+            log.info(f" > Downloading model to {output_path}")
             # download from github release
             self._download_zip_file(model_item["github_rls_url"], output_path)
             self.print_model_license(model_item=model_item)
@@ -343,7 +344,7 @@ class ModelManager(object):
             with zipfile.ZipFile(io.BytesIO(r.content)) as z:
                 z.extractall(output_folder)
         except zipfile.BadZipFile:
-            print(f" > Error: Bad zip file - {file_url}")
+            log.error(f"Bad zip file - {file_url}")
             raise zipfile.BadZipFile  # pylint: disable=raise-missing-from
         # move the files to the outer path
         for file_path in z.namelist()[1:]:

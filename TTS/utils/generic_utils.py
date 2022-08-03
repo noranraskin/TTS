@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Dict
+from loguru import logger as log
 
 import fsspec
 import torch
@@ -71,9 +72,9 @@ def remove_experiment_folder(experiment_path):
     if not checkpoint_files:
         if fs.exists(experiment_path):
             fs.rm(experiment_path, recursive=True)
-            print(" ! Run is removed from {}".format(experiment_path))
+            log.info(" ! Run is removed from {}".format(experiment_path))
     else:
-        print(" ! Run is kept in {}".format(experiment_path))
+        log.info(" ! Run is kept in {}".format(experiment_path))
 
 
 def count_parameters(model):
@@ -142,7 +143,7 @@ def set_init_dict(model_dict, checkpoint_state, c):
     # Partial initialization: if there is a mismatch with new and old layer, it is skipped.
     for k, v in checkpoint_state.items():
         if k not in model_dict:
-            print(" | > Layer missing in the model definition: {}".format(k))
+            log.info(" | > Layer missing in the model definition: {}".format(k))
     # 1. filter out unnecessary keys
     pretrained_dict = {k: v for k, v in checkpoint_state.items() if k in model_dict}
     # 2. filter out different size layers
@@ -153,7 +154,7 @@ def set_init_dict(model_dict, checkpoint_state, c):
             pretrained_dict = {k: v for k, v in pretrained_dict.items() if reinit_layer_name not in k}
     # 4. overwrite entries in the existing state dict
     model_dict.update(pretrained_dict)
-    print(" | > {} / {} layers are restored.".format(len(pretrained_dict), len(model_dict)))
+    log.info(" | > {} / {} layers are restored.".format(len(pretrained_dict), len(model_dict)))
     return model_dict
 
 

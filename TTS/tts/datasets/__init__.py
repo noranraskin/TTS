@@ -2,6 +2,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 from typing import Callable, Dict, List, Tuple, Union
+from loguru import logger as log
 
 import numpy as np
 
@@ -111,7 +112,7 @@ def load_tts_samples(
         meta_data_train = formatter(root_path, meta_file_train, ignored_speakers=ignored_speakers)
         meta_data_train = [{**item, **{"language": language}} for item in meta_data_train]
 
-        print(f" | > Found {len(meta_data_train)} files in {Path(root_path).resolve()}")
+        log.info(f" | > Found {len(meta_data_train)} files in {Path(root_path).resolve()}")
         # load evaluation split if set
         if eval_split:
             if meta_file_val:
@@ -162,8 +163,8 @@ def find_unique_chars(data_samples, verbose=True):
     chars_force_lower = set(chars_force_lower)
 
     if verbose:
-        print(f" > Number of unique characters: {len(chars)}")
-        print(f" > Unique characters: {''.join(sorted(chars))}")
-        print(f" > Unique lower characters: {''.join(sorted(lower_chars))}")
-        print(f" > Unique all forced to lower characters: {''.join(sorted(chars_force_lower))}")
+        log.info(f" > Number of unique characters: {len(chars)}")
+        log.info(f" > Unique characters: {''.join(sorted(chars))}")
+        log.info(f" > Unique lower characters: {''.join(sorted(lower_chars))}")
+        log.info(f" > Unique all forced to lower characters: {''.join(sorted(chars_force_lower))}")
     return chars_force_lower

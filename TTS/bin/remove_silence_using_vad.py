@@ -2,6 +2,7 @@ import argparse
 import glob
 import os
 import pathlib
+from loguru import logger as log
 
 from tqdm import tqdm
 
@@ -30,14 +31,14 @@ def adjust_path_and_remove_silence(audio_path):
 
 def preprocess_audios():
     files = sorted(glob.glob(os.path.join(args.input_dir, args.glob), recursive=True))
-    print("> Number of files: ", len(files))
+    log.info("> Number of files: ", len(files))
     if not args.force:
-        print("> Ignoring files that already exist in the output directory.")
+        log.info("> Ignoring files that already exist in the output directory.")
 
     if args.trim_just_beginning_and_end:
-        print("> Trimming just the beginning and the end with nonspeech parts.")
+        log.info("> Trimming just the beginning and the end with nonspeech parts.")
     else:
-        print("> Trimming all nonspeech parts.")
+        log.info("> Trimming all nonspeech parts.")
 
     if files:
         # create threads
@@ -46,7 +47,7 @@ def preprocess_audios():
         for f in tqdm(files):
             adjust_path_and_remove_silence(f)
     else:
-        print("> No files Found !")
+        log.info("> No files Found !")
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+from loguru import logger as log
 import librosa
 import matplotlib
 import matplotlib.pyplot as plt
@@ -151,7 +152,7 @@ def visualize(
     if CONFIG.use_phonemes:
         seq = tokenizer.text_to_ids(text)
         text = tokenizer.ids_to_text(seq)
-        print(text)
+        log.info(text)
     plt.yticks(range(len(text)), list(text))
     plt.colorbar()
 
@@ -194,7 +195,7 @@ def visualize(
         plt.colorbar()
 
     if output_path:
-        print(output_path)
+        log.info(output_path)
         fig.savefig(output_path)
         plt.close()
 

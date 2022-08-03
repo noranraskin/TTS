@@ -3,6 +3,7 @@
 
 import argparse
 import os
+from loguru import logger as log
 
 import numpy as np
 import torch
@@ -212,7 +213,7 @@ def extract_spectrograms(
                 ap.save_wav(wav, wav_path)
 
             if debug:
-                print("Audio for debug saved at:", wav_gl_path)
+                log.info("Audio for debug saved at:", wav_gl_path)
                 wav = ap.inv_melspectrogram(mel)
                 ap.save_wav(wav, wav_gl_path)
 
@@ -254,7 +255,7 @@ def main(args):  # pylint: disable=redefined-outer-name
         model.cuda()
 
     num_params = count_parameters(model)
-    print("\n > Model has {} parameters".format(num_params), flush=True)
+    log.info("\n > Model has {} parameters".format(num_params), flush=True)
     # set r
     r = 1 if c.model.lower() == "glow_tts" else model.decoder.r
     own_loader = setup_loader(ap, r, verbose=True)

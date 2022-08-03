@@ -4,6 +4,7 @@
 import argparse
 import glob
 import os
+from loguru import logger as log
 
 import numpy as np
 from tqdm import tqdm
@@ -42,7 +43,7 @@ def main():
         dataset_items = glob.glob(os.path.join(args.data_path, "**", "*.wav"), recursive=True)
     else:
         dataset_items = load_tts_samples(CONFIG.datasets)[0]  # take only train data
-    print(f" > There are {len(dataset_items)} files.")
+    log.info(f" > There are {len(dataset_items)} files.")
 
     mel_sum = 0
     mel_square_sum = 0
@@ -74,10 +75,10 @@ def main():
     stats["linear_mean"] = linear_mean
     stats["linear_std"] = linear_scale
 
-    print(f" > Avg mel spec mean: {mel_mean.mean()}")
-    print(f" > Avg mel spec scale: {mel_scale.mean()}")
-    print(f" > Avg linear spec mean: {linear_mean.mean()}")
-    print(f" > Avg linear spec scale: {linear_scale.mean()}")
+    log.info(f" > Avg mel spec mean: {mel_mean.mean()}")
+    log.info(f" > Avg mel spec scale: {mel_scale.mean()}")
+    log.info(f" > Avg linear spec mean: {linear_mean.mean()}")
+    log.info(f" > Avg linear spec scale: {linear_scale.mean()}")
 
     # set default config values for mean-var scaling
     CONFIG.audio.stats_path = output_file_path
@@ -89,7 +90,7 @@ def main():
     del CONFIG.audio.clip_norm
     stats["audio_config"] = CONFIG.audio.to_dict()
     np.save(output_file_path, stats, allow_pickle=True)
-    print(f" > stats saved to {output_file_path}")
+    log.info(f" > stats saved to {output_file_path}")
 
 
 if __name__ == "__main__":

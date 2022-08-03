@@ -1,3 +1,4 @@
+from loguru import logger as log
 import datetime
 import glob
 import os
@@ -42,7 +43,7 @@ class AugmentWAV(object):
                         self.noise_list[noise_dir] = []
                     self.noise_list[noise_dir].append(wav_file)
 
-                print(
+                log.info(
                     f" | > Using Additive Noise Augmentation: with {len(additive_files)} audios instances from {self.additive_noise_types}"
                 )
 
@@ -54,7 +55,7 @@ class AugmentWAV(object):
                 self.rir_files = glob.glob(os.path.join(self.rir_config["rir_path"], "**/*.wav"), recursive=True)
                 self.use_rir = True
 
-            print(f" | > Using RIR Noise Augmentation: with {len(self.rir_files)} audios instances")
+            log.info(f" | > Using RIR Noise Augmentation: with {len(self.rir_files)} audios instances")
 
         self.create_augmentation_global_list()
 
@@ -149,7 +150,7 @@ def setup_encoder_model(config: "Coqpit"):
 def save_checkpoint(model, optimizer, criterion, model_loss, out_path, current_step, epoch):
     checkpoint_path = "checkpoint_{}.pth".format(current_step)
     checkpoint_path = os.path.join(out_path, checkpoint_path)
-    print(" | | > Checkpoint saving : {}".format(checkpoint_path))
+    log.info(" | | > Checkpoint saving : {}".format(checkpoint_path))
 
     new_state_dict = model.state_dict()
     state = {
@@ -179,6 +180,6 @@ def save_best_model(model, optimizer, criterion, model_loss, best_loss, out_path
         best_loss = model_loss
         bestmodel_path = "best_model.pth"
         bestmodel_path = os.path.join(out_path, bestmodel_path)
-        print("\n > BEST MODEL ({0:.5f}) : {1:}".format(model_loss, bestmodel_path))
+        log.info("\n > BEST MODEL ({0:.5f}) : {1:}".format(model_loss, bestmodel_path))
         save_fsspec(state, bestmodel_path)
     return best_loss

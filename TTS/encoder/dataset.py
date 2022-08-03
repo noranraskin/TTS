@@ -1,4 +1,5 @@
 import random
+from loguru import logger as log
 
 import torch
 from torch.utils.data import Dataset
@@ -51,12 +52,12 @@ class EncoderDataset(Dataset):
                 self.gaussian_augmentation_config = augmentation_config["gaussian"]
 
         if self.verbose:
-            print("\n > DataLoader initialization")
-            print(f" | > Classes per Batch: {num_classes_in_batch}")
-            print(f" | > Number of instances : {len(self.items)}")
-            print(f" | > Sequence length: {self.seq_len}")
-            print(f" | > Num Classes: {len(self.classes)}")
-            print(f" | > Classes: {self.classes}")
+            log.info("\n > DataLoader initialization")
+            log.info(f" | > Classes per Batch: {num_classes_in_batch}")
+            log.info(f" | > Number of instances : {len(self.items)}")
+            log.info(f" | > Sequence length: {self.seq_len}")
+            log.info(f" | > Num Classes: {len(self.classes)}")
+            log.info(f" | > Classes: {self.classes}")
 
     def load_wav(self, filename):
         audio = self.ap.load_wav(filename, sr=self.ap.sample_rate)

@@ -1,5 +1,6 @@
 import torch
 import torchaudio
+from loguru import logger as log
 
 
 def read_audio(path):
@@ -74,7 +75,7 @@ def remove_silence(
     if new_speech_timestamps:
         wav = collect_chunks(new_speech_timestamps, wav)
     else:
-        print(f"> The file {audio_path} probably does not have speech please check it !!")
+        log.info(f"> The file {audio_path} probably does not have speech please check it !!")
 
     # save audio
     save_audio(out_path, wav, sampling_rate=gt_sample_rate)

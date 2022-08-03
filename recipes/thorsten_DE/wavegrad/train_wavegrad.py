@@ -1,5 +1,5 @@
 import os
-
+from loguru import logger as log
 from trainer import Trainer, TrainerArgs
 
 from TTS.utils.audio import AudioProcessor
@@ -30,7 +30,7 @@ config = WavegradConfig(
 
 # download dataset if not already present
 if not os.path.exists(config.data_path):
-    print("Downloading dataset")
+    log.info("Downloading dataset")
     download_path = os.path.abspath(os.path.join(os.path.abspath(config.data_path), "../../"))
     download_thorsten_de(download_path)
 

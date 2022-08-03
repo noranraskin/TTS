@@ -1,5 +1,6 @@
 import os
 import unittest
+from loguru import logger as log
 
 from tests import get_tests_input_path, get_tests_output_path, get_tests_path
 from TTS.config import BaseAudioConfig
@@ -25,7 +26,7 @@ class TestAudio(unittest.TestCase):
         3. extract mel-spec
         4. invert to wav and save the output
         """
-        print(" > Sanity check for the process wav -> mel -> wav")
+        log.info(" > Sanity check for the process wav -> mel -> wav")
 
         def _test(max_norm, signal_norm, symmetric_norm, clip_norm):
             self.ap.max_norm = max_norm
@@ -38,7 +39,7 @@ class TestAudio(unittest.TestCase):
             file_name = "/audio_test-melspec_max_norm_{}-signal_norm_{}-symmetric_{}-clip_norm_{}.wav".format(
                 max_norm, signal_norm, symmetric_norm, clip_norm
             )
-            print(" | > Creating wav file at : ", file_name)
+            log.info(" | > Creating wav file at : ", file_name)
             self.ap.save_wav(wav_, OUT_PATH + file_name)
 
         # maxnorm = 1.0
@@ -56,7 +57,7 @@ class TestAudio(unittest.TestCase):
 
     def test_normalize(self):
         """Check normalization and denormalization for range values and consistency"""
-        print(" > Testing normalization and denormalization.")
+        log.info(" > Testing normalization and denormalization.")
         wav = self.ap.load_wav(WAV_FILE)
         wav = self.ap.sound_norm(wav)  # normalize audio to get abetter normalization range below.
         self.ap.signal_norm = False
@@ -68,7 +69,7 @@ class TestAudio(unittest.TestCase):
         self.ap.clip_norm = False
         self.ap.max_norm = 4.0
         x_norm = self.ap.normalize(x)
-        print(
+        log.info(
             f" > MaxNorm: {self.ap.max_norm}, ClipNorm:{self.ap.clip_norm}, SymmetricNorm:{self.ap.symmetric_norm}, SignalNorm:{self.ap.signal_norm} Range-> {x_norm.max()} --  {x_norm.min()}"
         )
         assert (x_old - x).sum() == 0
@@ -84,7 +85,7 @@ class TestAudio(unittest.TestCase):
         self.ap.clip_norm = True
         self.ap.max_norm = 4.0
         x_norm = self.ap.normalize(x)
-        print(
+        log.info(
             f" > MaxNorm: {self.ap.max_norm}, ClipNorm:{self.ap.clip_norm}, SymmetricNorm:{self.ap.symmetric_norm}, SignalNorm:{self.ap.signal_norm} Range-> {x_norm.max()} --  {x_norm.min()}"
         )
 
@@ -101,7 +102,7 @@ class TestAudio(unittest.TestCase):
         self.ap.clip_norm = False
         self.ap.max_norm = 4.0
         x_norm = self.ap.normalize(x)
-        print(
+        log.info(
             f" > MaxNorm: {self.ap.max_norm}, ClipNorm:{self.ap.clip_norm}, SymmetricNorm:{self.ap.symmetric_norm}, SignalNorm:{self.ap.signal_norm} Range-> {x_norm.max()} --  {x_norm.min()}"
         )
 
@@ -119,7 +120,7 @@ class TestAudio(unittest.TestCase):
         self.ap.clip_norm = True
         self.ap.max_norm = 4.0
         x_norm = self.ap.normalize(x)
-        print(
+        log.info(
             f" > MaxNorm: {self.ap.max_norm}, ClipNorm:{self.ap.clip_norm}, SymmetricNorm:{self.ap.symmetric_norm}, SignalNorm:{self.ap.signal_norm} Range-> {x_norm.max()} --  {x_norm.min()}"
         )
 
@@ -136,7 +137,7 @@ class TestAudio(unittest.TestCase):
         self.ap.symmetric_norm = False
         self.ap.max_norm = 1.0
         x_norm = self.ap.normalize(x)
-        print(
+        log.info(
             f" > MaxNorm: {self.ap.max_norm}, ClipNorm:{self.ap.clip_norm}, SymmetricNorm:{self.ap.symmetric_norm}, SignalNorm:{self.ap.signal_norm} Range-> {x_norm.max()} --  {x_norm.min()}"
         )
 
@@ -150,7 +151,7 @@ class TestAudio(unittest.TestCase):
         self.ap.symmetric_norm = True
         self.ap.max_norm = 1.0
         x_norm = self.ap.normalize(x)
-        print(
+        log.info(
             f" > MaxNorm: {self.ap.max_norm}, ClipNorm:{self.ap.clip_norm}, SymmetricNorm:{self.ap.symmetric_norm}, SignalNorm:{self.ap.signal_norm} Range-> {x_norm.max()} --  {x_norm.min()}"
         )
 

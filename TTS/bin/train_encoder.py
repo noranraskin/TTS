@@ -5,6 +5,7 @@ import os
 import sys
 import time
 import traceback
+from loguru import logger as log
 
 import torch
 from torch.utils.data import DataLoader

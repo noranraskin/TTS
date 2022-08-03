@@ -1,5 +1,6 @@
 import os
 from typing import Optional
+from loguru import logger as log
 
 from TTS.utils.download import download_kaggle_dataset, download_url, extract_archive
 
@@ -15,7 +16,7 @@ def download_ljspeech(path: str):
     download_url(url, path)
     basename = os.path.basename(url)
     archive = os.path.join(path, basename)
-    print(" > Extracting archive file...")
+    log.info(" > Extracting archive file...")
     extract_archive(archive)
 
 
@@ -35,7 +36,7 @@ def download_vctk(path: str, use_kaggle: Optional[bool] = False):
         download_url(url, path)
         basename = os.path.basename(url)
         archive = os.path.join(path, basename)
-        print(" > Extracting archive file...")
+        log.info(" > Extracting archive file...")
         extract_archive(archive)
 
 
@@ -71,19 +72,19 @@ def download_libri_tts(path: str, subset: Optional[str] = "all"):
     os.makedirs(path, exist_ok=True)
     if subset == "all":
         for sub, val in subset_dict.items():
-            print(f" > Downloading {sub}...")
+            log.info(f" > Downloading {sub}...")
             download_url(val, path)
             basename = os.path.basename(val)
             archive = os.path.join(path, basename)
-            print(" > Extracting archive file...")
+            log.info(" > Extracting archive file...")
             extract_archive(archive)
-        print(" > All subsets downloaded")
+        log.info(" > All subsets downloaded")
     else:
         url = subset_dict[subset]
         download_url(url, path)
         basename = os.path.basename(url)
         archive = os.path.join(path, basename)
-        print(" > Extracting archive file...")
+        log.info(" > Extracting archive file...")
         extract_archive(archive)
 
 
@@ -98,7 +99,7 @@ def download_thorsten_de(path: str):
     download_url(url, path)
     basename = os.path.basename(url)
     archive = os.path.join(path, basename)
-    print(" > Extracting archive file...")
+    log.info(" > Extracting archive file...")
     extract_archive(archive)
 
 
@@ -122,5 +123,5 @@ def download_mailabs(path: str, language: str = "english"):
     download_url(url, path)
     basename = os.path.basename(url)
     archive = os.path.join(path, basename)
-    print(" > Extracting archive file...")
+    log.info(" > Extracting archive file...")
     extract_archive(archive)

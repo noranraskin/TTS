@@ -1,6 +1,7 @@
 import collections
 import re
 from enum import Enum
+from loguru import logger as log
 
 import six
 
@@ -163,10 +164,10 @@ class Punctuation:
 #     punc = Punctuation()
 #     text = "This is. This is, example!"
 
-#     print(punc.strip(text))
+#     log.info(punc.strip(text))
 
 #     split_text, puncs = punc.strip_to_restore(text)
-#     print(split_text, " ---- ", puncs)
+#     log.info(split_text, " ---- ", puncs)
 
 #     restored_text = punc.restore(split_text, puncs)
-#     print(restored_text)
+#     log.info(restored_text)

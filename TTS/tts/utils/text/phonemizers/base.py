@@ -1,5 +1,6 @@
 import abc
 from typing import List, Tuple
+from loguru import logger as log
 
 from TTS.tts.utils.text.punctuation import Punctuation
 
@@ -137,5 +138,5 @@ class BasePhonemizer(abc.ABC):
 
     def print_logs(self, level: int = 0):
         indent = "\t" * level
-        print(f"{indent}| > phoneme language: {self.language}")
-        print(f"{indent}| > phoneme backend: {self.name()}")
+        log.info(f"{indent}| > phoneme language: {self.language}")
+        log.info(f"{indent}| > phoneme backend: {self.name()}")

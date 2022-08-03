@@ -2,6 +2,7 @@
 import os
 import platform
 import sys
+from loguru import logger as log
 
 import numpy
 import torch
@@ -41,7 +42,7 @@ def package_info():
 
 def main():
     details = {"System": system_info(), "CUDA": cuda_info(), "Packages": package_info()}
-    print(json.dumps(details, indent=4, sort_keys=True))
+    log.info(json.dumps(details, indent=4, sort_keys=True))
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 import os
 import unittest
+from loguru import logger as log
 
 from tests import get_tests_output_path
 from TTS.config import load_config
@@ -27,7 +28,7 @@ class SynthesizerTest(unittest.TestCase):
 
     def test_split_into_sentences(self):
         """Check demo server sentences split as expected"""
-        print("\n > Testing demo server sentence splitting")
+        log.info("\n > Testing demo server sentence splitting")
         # pylint: disable=attribute-defined-outside-init, protected-access
         self.seg = Synthesizer._get_segmenter("en")
         sis = Synthesizer.split_into_sentences

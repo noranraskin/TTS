@@ -1,6 +1,7 @@
 import os
 import random
 from typing import Dict, List, Tuple, Union
+from loguru import logger as log
 
 import torch
 import torch.distributed as dist
@@ -103,7 +104,7 @@ class BaseTTS(BaseTrainerModel):
             )
         # init speaker embedding layer
         if config.use_speaker_embedding and not config.use_d_vector_file:
-            print(" > Init speaker_embedding layer.")
+            log.info(" > Init speaker_embedding layer.")
             self.speaker_embedding = nn.Embedding(self.num_speakers, self.embedded_speaker_dim)
             self.speaker_embedding.weight.data.normal_(0, 0.3)
 
@@ -240,12 +241,12 @@ class BaseTTS(BaseTrainerModel):
 
         if getattr(config, "use_language_weighted_sampler", False):
             alpha = getattr(config, "language_weighted_sampler_alpha", 1.0)
-            print(" > Using Language weighted sampler with alpha:", alpha)
+            log.info(" > Using Language weighted sampler with alpha:", alpha)
             weights = get_language_balancer_weights(data_items) * alpha
 
         if getattr(config, "use_speaker_weighted_sampler", False):
             alpha = getattr(config, "speaker_weighted_sampler_alpha", 1.0)
-            print(" > Using Speaker weighted sampler with alpha:", alpha)
+            log.info(" > Using Speaker weighted sampler with alpha:", alpha)
             if weights is not None:
                 weights += get_speaker_balancer_weights(data_items) * alpha
             else:
@@ -253,7 +254,7 @@ class BaseTTS(BaseTrainerModel):
 
         if getattr(config, "use_length_weighted_sampler", False):
             alpha = getattr(config, "length_weighted_sampler_alpha", 1.0)
-            print(" > Using Length weighted sampler with alpha:", alpha)
+            log.info(" > Using Length weighted sampler with alpha:", alpha)
             if weights is not None:
                 weights += get_length_balancer_weights(data_items) * alpha
             else:
@@ -380,7 +381,7 @@ class BaseTTS(BaseTrainerModel):
         Returns:
             Tuple[Dict, Dict]: Test figures and audios to be projected to Tensorboard.
         """
-        print(" | > Synthesizing test sentences.")
+        log.info(" | > Synthesizing test sentences.")
         test_audios = {}
         test_figures = {}
         test_sentences = self.config.test_sentences
@@ -416,8 +417,8 @@ class BaseTTS(BaseTrainerModel):
             if hasattr(trainer.config, "model_args"):
                 trainer.config.model_args.speakers_file = output_path
             trainer.config.save_json(os.path.join(trainer.output_path, "config.json"))
-            print(f" > `speakers.pth` is saved to {output_path}.")
-            print(" > `speakers_file` is updated in the config.json.")
+            log.info(f" > `speakers.pth` is saved to {output_path}.")
+            log.info(" > `speakers_file` is updated in the config.json.")
 
         if hasattr(self, "language_manager") and self.language_manager is not None:
             output_path = os.path.join(trainer.output_path, "language_ids.json")
@@ -426,5 +427,5 @@ class BaseTTS(BaseTrainerModel):
             if hasattr(trainer.config, "model_args"):
                 trainer.config.model_args.language_ids_file = output_path
             trainer.config.save_json(os.path.join(trainer.output_path, "config.json"))
-            print(f" > `language_ids.json` is saved to {output_path}.")
-            print(" > `language_ids_file` is updated in the config.json.")
+            log.info(f" > `language_ids.json` is saved to {output_path}.")
+            log.info(" > `language_ids_file` is updated in the config.json.")

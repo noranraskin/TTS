@@ -1,3 +1,4 @@
+from loguru import logger as log
 import numpy as np
 import torch
 import torchaudio
@@ -117,7 +118,7 @@ class BaseEncoder(nn.Module):
             if eval:
                 raise error
 
-            print(" > Partial model initialization.")
+            log.info(" > Partial model initialization.")
             model_dict = self.state_dict()
             model_dict = set_init_dict(model_dict, state["model"], c)
             self.load_state_dict(model_dict)
@@ -128,7 +129,7 @@ class BaseEncoder(nn.Module):
             try:
                 criterion.load_state_dict(state["criterion"])
             except (KeyError, RuntimeError) as error:
-                print(" > Criterion load ignored because of:", error)
+                log.error(" > Criterion load ignored because of:", error)
 
         # instance and load the criterion for the encoder classifier in inference time
         if (

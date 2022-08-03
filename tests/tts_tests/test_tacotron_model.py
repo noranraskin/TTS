@@ -1,6 +1,7 @@
 import copy
 import os
 import unittest
+from loguru import logger as log
 
 import torch
 from torch import nn, optim
@@ -55,7 +56,7 @@ class TacotronTrainTest(unittest.TestCase):
         criterion_st = nn.BCEWithLogitsLoss().to(device)
         model = Tacotron(config).to(device)  # FIXME: missing num_speakers parameter to Tacotron ctor
         model.train()
-        print(" > Num parameters for Tacotron model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for Tacotron model:%s" % (count_parameters(model)))
         model_ref = copy.deepcopy(model)
         count = 0
         for param, param_ref in zip(model.parameters(), model_ref.parameters()):
@@ -109,7 +110,7 @@ class MultiSpeakeTacotronTrainTest(unittest.TestCase):
         config.d_vector_dim = 55
         model = Tacotron(config).to(device)  # FIXME: missing num_speakers parameter to Tacotron ctor
         model.train()
-        print(" > Num parameters for Tacotron model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for Tacotron model:%s" % (count_parameters(model)))
         model_ref = copy.deepcopy(model)
         count = 0
         for param, param_ref in zip(model.parameters(), model_ref.parameters()):
@@ -168,8 +169,7 @@ class TacotronGSTTrainTest(unittest.TestCase):
         config.gst = GSTConfig()
         model = Tacotron(config).to(device)  # FIXME: missing num_speakers parameter to Tacotron ctor
         model.train()
-        # print(model)
-        print(" > Num parameters for Tacotron GST model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for Tacotron GST model:%s" % (count_parameters(model)))
         model_ref = copy.deepcopy(model)
         count = 0
         for param, param_ref in zip(model.parameters(), model_ref.parameters()):
@@ -220,8 +220,7 @@ class TacotronGSTTrainTest(unittest.TestCase):
         criterion_st = nn.BCEWithLogitsLoss().to(device)
         model = Tacotron(config).to(device)  # FIXME: missing num_speakers parameter to Tacotron ctor
         model.train()
-        # print(model)
-        print(" > Num parameters for Tacotron GST model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for Tacotron GST model:%s" % (count_parameters(model)))
         model_ref = copy.deepcopy(model)
         count = 0
         for param, param_ref in zip(model.parameters(), model_ref.parameters()):
@@ -293,7 +292,7 @@ class TacotronCapacitronTrainTest(unittest.TestCase):
         criterion = model.get_criterion()
         optimizer = model.get_optimizer()
         model.train()
-        print(" > Num parameters for Tacotron with Capacitron VAE model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for Tacotron with Capacitron VAE model:%s" % (count_parameters(model)))
         model_ref = copy.deepcopy(model)
         count = 0
         for param, param_ref in zip(model.parameters(), model_ref.parameters()):
@@ -346,7 +345,7 @@ class SCGSTMultiSpeakeTacotronTrainTest(unittest.TestCase):
         config.d_vector_dim = 55
         model = Tacotron(config).to(device)  # FIXME: missing num_speakers parameter to Tacotron ctor
         model.train()
-        print(" > Num parameters for Tacotron model:%s" % (count_parameters(model)))
+        log.info(" > Num parameters for Tacotron model:%s" % (count_parameters(model)))
         model_ref = copy.deepcopy(model)
         count = 0
         for param, param_ref in zip(model.parameters(), model_ref.parameters()):

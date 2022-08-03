@@ -2,6 +2,7 @@ import collections
 import os
 import random
 from typing import Dict, List, Union
+from loguru import logger as log
 
 import numpy as np
 import torch
@@ -181,11 +182,11 @@ class TTSDataset(Dataset):
 
     def print_logs(self, level: int = 0) -> None:
         indent = "\t" * level
-        print("\n")
-        print(f"{indent}> DataLoader initialization")
-        print(f"{indent}| > Tokenizer:")
+        log.info("\n")
+        log.info(f"{indent}> DataLoader initialization")
+        log.info(f"{indent}| > Tokenizer:")
         self.tokenizer.print_logs(level + 1)
-        print(f"{indent}| > Number of instances : {len(self.samples)}")
+        log.info(f"{indent}| > Number of instances : {len(self.samples)}")
 
     def load_wav(self, filename):
         waveform = self.ap.load_wav(filename)
@@ -347,16 +348,16 @@ class TTSDataset(Dataset):
         self.samples = samples
 
         if self.verbose:
-            print(" | > Preprocessing samples")
-            print(" | > Max text length: {}".format(np.max(text_lengths)))
-            print(" | > Min text length: {}".format(np.min(text_lengths)))
-            print(" | > Avg text length: {}".format(np.mean(text_lengths)))
-            print(" | ")
-            print(" | > Max audio length: {}".format(np.max(audio_lengths)))
-            print(" | > Min audio length: {}".format(np.min(audio_lengths)))
-            print(" | > Avg audio length: {}".format(np.mean(audio_lengths)))
-            print(f" | > Num. instances discarded samples: {len(ignore_idx)}")
-            print(" | > Batch group size: {}.".format(self.batch_group_size))
+            log.info(" | > Preprocessing samples")
+            log.info(" | > Max text length: {}".format(np.max(text_lengths)))
+            log.info(" | > Min text length: {}".format(np.min(text_lengths)))
+            log.info(" | > Avg text length: {}".format(np.mean(text_lengths)))
+            log.info(" | ")
+            log.info(" | > Max audio length: {}".format(np.max(audio_lengths)))
+            log.info(" | > Min audio length: {}".format(np.min(audio_lengths)))
+            log.info(" | > Avg audio length: {}".format(np.mean(audio_lengths)))
+            log.info(f" | > Num. instances discarded samples: {len(ignore_idx)}")
+            log.info(" | > Batch group size: {}.".format(self.batch_group_size))
 
     @staticmethod
     def _sort_batch(batch, text_lengths):
@@ -591,7 +592,7 @@ class PhonemeDataset(Dataset):
 
         We use pytorch dataloader because we are lazy.
         """
-        print("[*] Pre-computing phonemes...")
+        log.info("[*] Pre-computing phonemes...")
         with tqdm.tqdm(total=len(self)) as pbar:
             batch_size = num_workers if num_workers > 0 else 1
             dataloder = torch.utils.data.DataLoader(
@@ -613,11 +614,11 @@ class PhonemeDataset(Dataset):
 
     def print_logs(self, level: int = 0) -> None:
         indent = "\t" * level
-        print("\n")
-        print(f"{indent}> PhonemeDataset ")
-        print(f"{indent}| > Tokenizer:")
+        log.info("\n")
+        log.info(f"{indent}> PhonemeDataset ")
+        log.info(f"{indent}| > Tokenizer:")
         self.tokenizer.print_logs(level + 1)
-        print(f"{indent}| > Number of instances : {len(self.samples)}")
+        log.info(f"{indent}| > Number of instances : {len(self.samples)}")
 
 
 class F0Dataset:
@@ -679,7 +680,7 @@ class F0Dataset:
         return len(self.samples)
 
     def precompute(self, num_workers=0):
-        print("[*] Pre-computing F0s...")
+        log.info("[*] Pre-computing F0s...")
         with tqdm.tqdm(total=len(self)) as pbar:
             batch_size = num_workers if num_workers > 0 else 1
             # we do not normalize at preproessing
@@ -767,6 +768,6 @@ class F0Dataset:
 
     def print_logs(self, level: int = 0) -> None:
         indent = "\t" * level
-        print("\n")
-        print(f"{indent}> F0Dataset ")
-        print(f"{indent}| > Number of instances : {len(self.samples)}")
+        log.info("\n")
+        log.info(f"{indent}> F0Dataset ")
+        log.info(f"{indent}| > Number of instances : {len(self.samples)}")

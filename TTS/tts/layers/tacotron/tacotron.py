@@ -1,5 +1,6 @@
 # coding: utf-8
 # adapted from https://github.com/r9y9/tacotron_pytorch
+from loguru import logger as log
 
 import torch
 from torch import nn
@@ -481,7 +482,7 @@ class Decoder(nn.Module):
             if t > inputs.shape[1] / 4 and (stop_token > 0.6 or attention[:, -1].item() > 0.6):
                 break
             if t > self.max_decoder_steps:
-                print("   | > Decoder stopped with 'max_decoder_steps")
+                log.info("   | > Decoder stopped with 'max_decoder_steps")
                 break
         return self._parse_outputs(outputs, attentions, stop_tokens)
 

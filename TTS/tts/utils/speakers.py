@@ -1,6 +1,7 @@
 import json
 import os
 from typing import Any, Dict, List, Union
+from loguru import logger as log
 
 import fsspec
 import numpy as np
@@ -174,7 +175,7 @@ def get_speaker_manager(c: Coqpit, data: List = None, restore_path: str = None, 
             if c.use_d_vector_file:
                 # restore speaker manager with the embedding file
                 if not os.path.exists(speakers_file):
-                    print("WARNING: speakers.json was not found in restore_path, trying to use CONFIG.d_vector_file")
+                    log.warning("speakers.json was not found in restore_path, trying to use CONFIG.d_vector_file")
                     if not os.path.exists(c.d_vector_file):
                         raise RuntimeError(
                             "You must copy the file speakers.json to restore_path, or set a valid file in CONFIG.d_vector_file"
@@ -197,7 +198,7 @@ def get_speaker_manager(c: Coqpit, data: List = None, restore_path: str = None, 
             speaker_manager.load_ids_from_file(c.speakers_file)
 
         if speaker_manager.num_speakers > 0:
-            print(
+            log.info(
                 " > Speaker manager is loaded with {} speakers: {}".format(
                     speaker_manager.num_speakers, ", ".join(speaker_manager.ids)
                 )
@@ -206,7 +207,7 @@ def get_speaker_manager(c: Coqpit, data: List = None, restore_path: str = None, 
         # save file if path is defined
         if out_path:
             out_file_path = os.path.join(out_path, "speakers.json")
-            print(f" > Saving `speakers.json` to {out_file_path}.")
+            log.info(f" > Saving `speakers.json` to {out_file_path}.")
             if c.use_d_vector_file and c.d_vector_file:
                 speaker_manager.save_embeddings_to_file(out_file_path)
             else:

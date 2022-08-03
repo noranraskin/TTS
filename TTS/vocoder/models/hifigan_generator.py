@@ -1,3 +1,5 @@
+from loguru import logger as log
+
 # adopted from https://github.com/jik876/hifi-gan/blob/master/models.py
 import torch
 from torch import nn
@@ -281,7 +283,7 @@ class HifiganGenerator(torch.nn.Module):
         return self.forward(c)
 
     def remove_weight_norm(self):
-        print("Removing weight norm...")
+        log.info("Removing weight norm...")
         for l in self.ups:
             remove_weight_norm(l)
         for l in self.resblocks:

@@ -1,4 +1,5 @@
 from typing import Dict
+from loguru import logger as log
 
 from TTS.tts.utils.text.japanese.phonemizer import japanese_text_to_phonemes
 from TTS.tts.utils.text.phonemizers.base import BasePhonemizer
@@ -64,9 +65,9 @@ class JA_JP_Phonemizer(BasePhonemizer):
 # if __name__ == "__main__":
 #     text = "これは、電話をかけるための私の日本語の例のテキストです。"
 #     e = JA_JP_Phonemizer()
-#     print(e.supported_languages())
-#     print(e.version())
-#     print(e.language)
-#     print(e.name())
-#     print(e.is_available())
-#     print("`" + e.phonemize(text) + "`")
+#     log.info(e.supported_languages())
+#     log.info(e.version())
+#     log.info(e.language)
+#     log.info(e.name())
+#     log.info(e.is_available())
+#     log.info("`" + e.phonemize(text) + "`")

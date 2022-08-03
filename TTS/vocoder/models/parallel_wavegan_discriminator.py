@@ -1,4 +1,5 @@
 import math
+from loguru import logger as log
 
 import torch
 from torch import nn
@@ -75,7 +76,7 @@ class ParallelWaveganDiscriminator(nn.Module):
     def remove_weight_norm(self):
         def _remove_weight_norm(m):
             try:
-                # print(f"Weight norm is removed from {m}.")
+                # log.info(f"Weight norm is removed from {m}.")
                 nn.utils.remove_weight_norm(m)
             except ValueError:  # this module didn't have weight norm
                 return
@@ -178,7 +179,7 @@ class ResidualParallelWaveganDiscriminator(nn.Module):
     def remove_weight_norm(self):
         def _remove_weight_norm(m):
             try:
-                print(f"Weight norm is removed from {m}.")
+                log.info(f"Weight norm is removed from {m}.")
                 nn.utils.remove_weight_norm(m)
             except ValueError:  # this module didn't have weight norm
                 return

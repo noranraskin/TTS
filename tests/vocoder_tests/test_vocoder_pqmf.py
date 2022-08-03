@@ -1,4 +1,5 @@
 import os
+from loguru import logger as log
 
 import soundfile as sf
 import torch
@@ -20,7 +21,7 @@ def test_pqmf():
     b2 = layer.analysis(w2)
     w2_ = layer.synthesis(b2)
 
-    print(w2_.max())
-    print(w2_.min())
-    print(w2_.mean())
+    log.info(w2_.max())
+    log.info(w2_.min())
+    log.info(w2_.mean())
     sf.write(os.path.join(get_tests_output_path(), "pqmf_output.wav"), w2_.flatten().detach(), sr)

@@ -2,6 +2,7 @@ import glob
 import os
 import random
 from multiprocessing import Manager
+from loguru import logger as log
 
 import numpy as np
 import torch
@@ -109,7 +110,7 @@ class GANDataset(Dataset):
         if self.compute_feat:
             # compute features from wav
             wavpath = self.item_list[idx]
-            # print(wavpath)
+            # log.info(wavpath)
 
             if self.use_cache and self.cache[idx] is not None:
                 audio, mel = self.cache[idx]

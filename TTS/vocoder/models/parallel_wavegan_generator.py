@@ -1,4 +1,5 @@
 import math
+from loguru import logger as log
 
 import numpy as np
 import torch
@@ -126,7 +127,7 @@ class ParallelWaveganGenerator(torch.nn.Module):
     def remove_weight_norm(self):
         def _remove_weight_norm(m):
             try:
-                # print(f"Weight norm is removed from {m}.")
+                # log.info(f"Weight norm is removed from {m}.")
                 torch.nn.utils.remove_weight_norm(m)
             except ValueError:  # this module didn't have weight norm
                 return
@@ -137,7 +138,7 @@ class ParallelWaveganGenerator(torch.nn.Module):
         def _apply_weight_norm(m):
             if isinstance(m, (torch.nn.Conv1d, torch.nn.Conv2d)):
                 torch.nn.utils.weight_norm(m)
-                # print(f"Weight norm is applied to {m}.")
+                # log.info(f"Weight norm is applied to {m}.")
 
         self.apply(_apply_weight_norm)
 

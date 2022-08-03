@@ -2,6 +2,7 @@
 import glob
 import os
 import shutil
+from loguru import logger as log
 
 from tests import get_tests_data_path, get_tests_output_path, run_cli
 from TTS.tts.utils.languages import LanguageManager
@@ -12,13 +13,13 @@ from TTS.utils.manage import ModelManager
 
 def test_run_all_models():
     """Check if all the models are downloadable and tts models run correctly."""
-    print(" > Run synthesizer with all the models.")
+    log.info(" > Run synthesizer with all the models.")
     download_dir = get_user_data_dir("tts")
     output_path = os.path.join(get_tests_output_path(), "output.wav")
     manager = ModelManager(output_prefix=get_tests_output_path())
     model_names = manager.list_models()
     for model_name in model_names:
-        print(f"\n > Run - {model_name}")
+        log.info(f"\n > Run - {model_name}")
         model_path, _, _ = manager.download_model(model_name)
         if "tts_models" in model_name:
             local_download_dir = os.path.dirname(model_path)
@@ -51,7 +52,7 @@ def test_run_all_models():
         else:
             # only download the model
             manager.download_model(model_name)
-        print(f" | > OK: {model_name}")
+        log.info(f" | > OK: {model_name}")
 
     folders = glob.glob(os.path.join(manager.output_prefix, "*"))
     assert len(folders) == len(model_names)
@@ -59,7 +60,7 @@ def test_run_all_models():
 
 
 def test_voice_conversion():
-    print(" > Run voice conversion inference using YourTTS model.")
+    log.info(" > Run voice conversion inference using YourTTS model.")
     model_name = "tts_models/multilingual/multi-dataset/your_tts"
     language_id = "en"
     speaker_wav = os.path.join(get_tests_data_path(), "ljspeech", "wavs", "LJ001-0001.wav")

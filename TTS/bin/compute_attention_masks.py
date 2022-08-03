@@ -2,6 +2,7 @@ import argparse
 import importlib
 import os
 from argparse import RawTextHelpFormatter
+from loguru import logger as log
 
 import numpy as np
 import torch
@@ -162,4 +163,4 @@ Example run:
         with open(metafile, "w", encoding="utf-8") as f:
             for p in file_paths:
                 f.write(f"{p[0]}|{p[1]}\n")
-        print(f" >> Metafile created: {metafile}")
+        log.info(f" >> Metafile created: {metafile}")

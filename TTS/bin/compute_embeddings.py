@@ -1,6 +1,7 @@
 import argparse
 import os
 from argparse import RawTextHelpFormatter
+from loguru import logger as log
 
 import torch
 from tqdm import tqdm
@@ -81,4 +82,4 @@ if speaker_mapping:
         os.makedirs(os.path.dirname(mapping_file_path), exist_ok=True)
 
     save_file(speaker_mapping, mapping_file_path)
-    print("Speaker embeddings saved at:", mapping_file_path)
+    log.info("Speaker embeddings saved at:", mapping_file_path)

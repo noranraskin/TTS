@@ -1,5 +1,6 @@
 import os
 import shutil
+from loguru import logger as log
 
 import numpy as np
 from torch.utils.data import DataLoader
@@ -80,5 +81,5 @@ def test_parametrized_wavernn_dataset():
         [1, C.audio["hop_length"] * 5, C.audio["hop_length"], 2, "mold", False, 0],
     ]
     for param in params:
-        print(param)
+        log.info(param)
         wavernn_dataset_case(*param)

@@ -4,6 +4,7 @@ import os
 import pickle as pickle_tts
 import shutil
 from typing import Any, Callable, Dict, Union
+from loguru import logger as log
 
 import fsspec
 import torch
@@ -144,7 +145,7 @@ def save_checkpoint(
 ):
     file_name = "checkpoint_{}.pth".format(current_step)
     checkpoint_path = os.path.join(output_folder, file_name)
-    print("\n > CHECKPOINT : {}".format(checkpoint_path))
+    log.info("\n > CHECKPOINT : {}".format(checkpoint_path))
     save_model(
         config,
         model,
@@ -174,7 +175,7 @@ def save_best_model(
     if current_loss < best_loss:
         best_model_name = f"best_model_{current_step}.pth"
         checkpoint_path = os.path.join(out_path, best_model_name)
-        print(" > BEST MODEL : {}".format(checkpoint_path))
+        log.info(" > BEST MODEL : {}".format(checkpoint_path))
         save_model(
             config,
             model,

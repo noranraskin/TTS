@@ -1,4 +1,5 @@
 from typing import Dict, Tuple
+from loguru import logger as log
 
 import librosa
 import numpy as np
@@ -376,9 +377,9 @@ class AudioProcessor(object):
         ), f" [!] win_length cannot be larger than fft_size - {self.win_length} vs {self.fft_size}"
         members = vars(self)
         if verbose:
-            print(" > Setting up Audio Processor...")
+            log.info(" > Setting up Audio Processor...")
             for key, value in members.items():
-                print(" | > {}:{}".format(key, value))
+                log.info(" | > {}:{}".format(key, value))
         # create spectrogram utils
         self.mel_basis = self._build_mel_basis()
         self.inv_mel_basis = np.linalg.pinv(self._build_mel_basis())
@@ -709,7 +710,7 @@ class AudioProcessor(object):
         S_complex = np.abs(S).astype(np.complex)
         y = self._istft(S_complex * angles)
         if not np.isfinite(y).all():
-            print(" [!] Waveform is not finite everywhere. Skipping the GL.")
+            log.info(" [!] Waveform is not finite everywhere. Skipping the GL.")
             return np.array([0.0])
         for _ in range(self.griffin_lim_iters):
             angles = np.exp(1j * np.angle(self._stft(y)))
@@ -844,7 +845,7 @@ class AudioProcessor(object):
             try:
                 x = self.trim_silence(x)
             except ValueError:
-                print(f" [!] File cannot be trimmed for silence - {filename}")
+                log.error(f" [!] File cannot be trimmed for silence - {filename}")
         if self.do_sound_norm:
             x = self.sound_norm(x)
         if self.do_rms_norm:

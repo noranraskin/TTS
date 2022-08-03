@@ -1,6 +1,7 @@
 import glob
 import os
 import shutil
+from loguru import logger as log
 
 from tests import get_device_id, get_tests_output_path, run_cli
 from TTS.config.shared_configs import BaseAudioConfig
@@ -41,7 +42,7 @@ config.audio.trim_db = 60
 config.loss = "ge2e"
 config.save_json(config_path)
 
-print(config)
+log.info(config)
 # train the model for one epoch
 run_test_train()
 

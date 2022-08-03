@@ -1,3 +1,5 @@
+from loguru import logger as log
+
 from TTS.tts.utils.text.phonemizers.base import BasePhonemizer
 from TTS.tts.utils.text.phonemizers.espeak_wrapper import ESpeak
 from TTS.tts.utils.text.phonemizers.gruut_wrapper import Gruut
@@ -50,4 +52,4 @@ def get_phonemizer_by_name(name: str, **kwargs) -> BasePhonemizer:
 
 
 if __name__ == "__main__":
-    print(DEF_LANG_TO_PHONEMIZER)
+    log.info(DEF_LANG_TO_PHONEMIZER)

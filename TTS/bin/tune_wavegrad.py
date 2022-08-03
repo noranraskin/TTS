@@ -1,6 +1,7 @@
 """Search a good noise schedule for WaveGrad for a given number of inferece iterations"""
 import argparse
 from itertools import product as cartesian_product
+from loguru import logger as log
 
 import numpy as np
 import torch
@@ -70,7 +71,7 @@ if args.use_cuda:
 
 # setup optimization parameters
 base_values = sorted(10 * np.random.uniform(size=args.search_depth))
-print(base_values)
+log.info(base_values)
 exponents = 10 ** np.linspace(-6, -1, num=args.num_iter)
 best_error = float("inf")
 best_schedule = None
@@ -96,5 +97,5 @@ for base in tqdm(cartesian_product(base_values, repeat=args.num_iter), total=tot
         if mse.item() < best_error:
             best_error = mse.item()
             best_schedule = {"beta": beta}
-            print(f" > Found a better schedule. - MSE: {mse.item()}")
+            log.info(f" > Found a better schedule. - MSE: {mse.item()}")
             np.save(args.output_path, best_schedule)

@@ -1,5 +1,5 @@
 import os
-
+from loguru import logger as log
 # Trainer: Where the ✨️ happens.
 # TrainingArgs: Defines the set of arguments of the Trainer.
 from trainer import Trainer, TrainerArgs
@@ -27,7 +27,7 @@ dataset_config = BaseDatasetConfig(
 
 # download dataset if not already present
 if not os.path.exists(dataset_config.path):
-    print("Downloading dataset")
+    log.info("Downloading dataset")
     download_thorsten_de(os.path.split(os.path.abspath(dataset_config.path))[0])
 
 # INITIALIZE THE TRAINING CONFIGURATION

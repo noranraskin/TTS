@@ -1,4 +1,5 @@
 from typing import Dict, List
+from loguru import logger as log
 
 from TTS.tts.utils.text.phonemizers import DEF_LANG_TO_PHONEMIZER, get_phonemizer_by_name
 
@@ -52,4 +53,4 @@ class MultiPhonemizer:
 #     for lang, text in texts.items():
 #         phoneme = ph.phonemize(text, lang)
 #         phonemes[lang] = phoneme
-#     print(phonemes)
+#     log.info(phonemes)

@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Tuple, Union
+from loguru import logger as log
 
 import torch
 from coqpit import Coqpit
@@ -260,7 +261,7 @@ class ForwardTTS(BaseTTS):
                 self.proj_g = nn.Conv1d(self.args.d_vector_dim, self.args.hidden_channels, 1)
         # init speaker embedding layer
         if config.use_speaker_embedding and not config.use_d_vector_file:
-            print(" > Init speaker_embedding layer.")
+            log.info(" > Init speaker_embedding layer.")
             self.emb_g = nn.Embedding(self.num_speakers, self.args.hidden_channels)
             nn.init.uniform_(self.emb_g.weight, -0.1, 0.1)
 

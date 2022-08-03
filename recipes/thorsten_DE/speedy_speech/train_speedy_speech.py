@@ -1,5 +1,5 @@
 import os
-
+from loguru import logger as log
 from trainer import Trainer, TrainerArgs
 
 from TTS.config import BaseAudioConfig, BaseDatasetConfig
@@ -17,7 +17,7 @@ dataset_config = BaseDatasetConfig(
 
 # download dataset if not already present
 if not os.path.exists(dataset_config.path):
-    print("Downloading dataset")
+    log.info("Downloading dataset")
     download_thorsten_de(os.path.split(os.path.abspath(dataset_config.path))[0])
 
 audio_config = BaseAudioConfig(

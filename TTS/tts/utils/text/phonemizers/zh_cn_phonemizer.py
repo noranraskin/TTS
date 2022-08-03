@@ -1,4 +1,5 @@
 from typing import Dict
+from loguru import logger as log
 
 from TTS.tts.utils.text.chinese_mandarin.phonemizer import chinese_text_to_phonemes
 from TTS.tts.utils.text.phonemizers.base import BasePhonemizer
@@ -54,9 +55,9 @@ class ZH_CN_Phonemizer(BasePhonemizer):
 # if __name__ == "__main__":
 #     text = "这是，样本中文。"
 #     e = ZH_CN_Phonemizer()
-#     print(e.supported_languages())
-#     print(e.version())
-#     print(e.language)
-#     print(e.name())
-#     print(e.is_available())
-#     print("`" + e.phonemize(text) + "`")
+#     log.info(e.supported_languages())
+#     log.info(e.version())
+#     log.info(e.language)
+#     log.info(e.name())
+#     log.info(e.is_available())
+#     log.info("`" + e.phonemize(text) + "`")

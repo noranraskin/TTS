@@ -1,3 +1,4 @@
+from loguru import logger as log
 import numpy as np
 import torch
 
@@ -7,7 +8,7 @@ from TTS.vocoder.models.melgan_multiscale_discriminator import MelganMultiscaleD
 
 def test_melgan_discriminator():
     model = MelganDiscriminator()
-    print(model)
+    log.info(model)
     dummy_input = torch.rand((4, 1, 256 * 10))
     output, _ = model(dummy_input)
     assert np.all(output.shape == (4, 1, 10))
@@ -15,7 +16,7 @@ def test_melgan_discriminator():
 
 def test_melgan_multi_scale_discriminator():
     model = MelganMultiscaleDiscriminator()
-    print(model)
+    log.info(model)
     dummy_input = torch.rand((4, 1, 256 * 16))
     scores, feats = model(dummy_input)
     assert len(scores) == 3

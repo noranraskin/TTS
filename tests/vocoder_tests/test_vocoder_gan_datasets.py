@@ -1,4 +1,5 @@
 import os
+from loguru import logger as log
 
 import numpy as np
 from torch.utils.data import DataLoader
@@ -105,5 +106,5 @@ def test_parametrized_gan_dataset():
         [1, C.audio["hop_length"] * 10, C.audio["hop_length"], 0, True, False, False, False, 0],
     ]
     for param in params:
-        print(param)
+        log.info(param)
         gan_dataset_case(*param)

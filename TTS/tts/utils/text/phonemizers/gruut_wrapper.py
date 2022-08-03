@@ -1,5 +1,6 @@
 import importlib
 from typing import List
+from loguru import logger as log
 
 import gruut
 from gruut_ipa import IPA
@@ -138,14 +139,14 @@ class Gruut(BasePhonemizer):
 
 if __name__ == "__main__":
     e = Gruut(language="en-us")
-    print(e.supported_languages())
-    print(e.version())
-    print(e.language)
-    print(e.name())
-    print(e.is_available())
+    log.info(e.supported_languages())
+    log.info(e.version())
+    log.info(e.language)
+    log.info(e.name())
+    log.info(e.is_available())
 
     e = Gruut(language="en-us", keep_puncs=False)
-    print("`" + e.phonemize("hello how are you today?") + "`")
+    log.info("`" + e.phonemize("hello how are you today?") + "`")
 
     e = Gruut(language="en-us", keep_puncs=True)
-    print("`" + e.phonemize("hello how, are you today?") + "`")
+    log.info("`" + e.phonemize("hello how, are you today?") + "`")

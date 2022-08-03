@@ -1,4 +1,5 @@
 from typing import Dict
+from loguru import logger as log
 
 import numpy as np
 import torch
@@ -20,12 +21,12 @@ def interpolate_vocoder_input(scale_factor, spec):
     Returns:
         torch.tensor: interpolated spectrogram.
     """
-    print(" > before interpolation :", spec.shape)
+    log.info(" > before interpolation :", spec.shape)
     spec = torch.tensor(spec).unsqueeze(0).unsqueeze(0)  # pylint: disable=not-callable
     spec = torch.nn.functional.interpolate(
         spec, scale_factor=scale_factor, recompute_scale_factor=True, mode="bilinear", align_corners=False
     ).squeeze(0)
-    print(" > after interpolation :", spec.shape)
+    log.info(" > after interpolation :", spec.shape)
     return spec
 
 
